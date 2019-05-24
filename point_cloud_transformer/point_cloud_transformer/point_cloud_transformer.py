@@ -16,7 +16,7 @@ class PointCloudTransformer(object):
     Inspector, cannot be used by Autodesk Inventor directly. Upon specifying an
     existing .txt file, this application will clean, subsample (if required), 
     and save the data in .xlsx format, which can be imported directly into 
-    Autodesk Inventor sketches.
+    Autodesk Inventor 2D sketches.
 
     """
     def __init__(self):
