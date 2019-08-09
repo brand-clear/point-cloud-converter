@@ -1,3 +1,6 @@
+"""
+@author: Brandon McCleary
+"""
 
 
 import sys
@@ -6,6 +9,25 @@ import os.path
 import pandas as pd
 from PyQt4 import QtGui, QtCore
 from pyqtauto.widgets import Dialog, OrphanMessageBox
+
+
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller."""
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS,
+        # and places our data files in a folder relative to that temp
+        # folder named as specified in the datas tuple in the spec file
+        base_path = os.path.join(sys._MEIPASS, 'data')
+    except Exception:
+        # sys._MEIPASS is not defined, so use the original path
+        base_path = os.path.join(
+                os.path.dirname(os.path.dirname(__file__)), 
+                'data', 
+                'images'
+        )
+
+    return os.path.join(base_path, relative_path)
+
 
 
 class PointCloudTransformer(object):
@@ -96,12 +118,12 @@ class Logic(object):
         ----------
         x : QString
 
-		Returns
-		-------
-	    x : float
-			Valid subsample.
-		None
-			Invalid subsample.
+        Returns
+        -------
+        x : float
+            Valid subsample.
+        None
+            Invalid subsample.
         
         """
         try:
@@ -135,11 +157,12 @@ class Logic(object):
 
         Parameters
         ----------
-		filepath: str
-			Valid absolute path to file containing raw point cloud data.
-		data : list[list]
+        filepath: str
+            Valid absolute path to file containing raw point cloud data.
+        data : list[list]
         subsample : float
-			Fraction of data to retain.
+            Fraction of data to retain.
+            
         """
         df = pd.DataFrame(data)
         df = df.sample(frac=subsample, random_state=random.randint(0,10))
@@ -160,6 +183,7 @@ class Logic(object):
         -------
         container : list[list]
             Contains refined data from `filepath`.
+            
         """
         with open(filepath, 'rb') as f:
             for line in f:
@@ -205,9 +229,7 @@ class SelectFileDialog(QtGui.QFileDialog):
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
-    root = 'L:\\Division2\\DRAFTING\\PointCloudTransformer\\data\\images'
-    icon_dir = os.path.join(root, 'sulzer.png')
-    app.setWindowIcon(QtGui.QIcon(QtGui.QPixmap(icon_dir)))
+    app.setWindowIcon(QtGui.QIcon(QtGui.QPixmap(resource_path('sulzer.png'))))
     PointCloudTransformer()
 
 
